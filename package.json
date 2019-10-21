@@ -1,0 +1,14 @@
+{
+  "name": "nodejsproject",
+  "version": "1.0.0",
+  "description": "nodejs app connected mongoDB via mogonoose",
+  "main": "index.js",
+  "scripts": {
+    "test": "none"
+  },
+  "keywords": [
+    "none"
+  ],
+  "author": "khanhhn",
+  "license": "ISC"
+}
