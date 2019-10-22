@@ -10,5 +10,8 @@
     "none"
   ],
   "author": "khanhhn",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.7.6"
+  }
 }
