@@ -17,3 +17,51 @@ const insertUser = async (name, age, email) => {
         console.log(`Không thể thêm mới bản ghi user.Error: ${error}`)
     }
 }
+//Muốn xóa tất cả các bản ghi(doc) => cẩn thận khi dùng
+const deleteAllUsers = async () => {
+    try {
+        await User.deleteMany({})
+        console.log('Đã xóa hết các bản ghi user')
+    } catch (error) {
+        console.log(`Không thể xóa hết các user.Error: ${user}`)
+    }
+}
+//Tìm kiếm một doc nào đó theo id
+const findUserById = async (userId) => {
+    try {
+        let foundUser = await User.findById(userId)
+        console.log(`foundUser = ${JSON.stringify(foundUser)}`)
+    } catch (error) {
+        console.log(`Không tìm thấy User. Error: ${error}`)
+    }
+}
+//Hiện tất các users, hiện có điều kiện
+const findSomeUsers = async () => {
+    try {
+        let foundUsers = await User.find(
+            {}, //Hiện tất cả các users
+            //Tìm những người có tuổi >=30,
+            //tên có chứa "le", không phân biệt hoa-thường()
+            // {age: {$gte: 30}, name: /ss/i}, //insensitive-case
+            ["name", "email", "age"],
+            //Sắp xếp
+            {
+                sort: {
+                    name: -1
+                }
+            }
+        ).skip(0).limit(5) //Bỏ qua 0 bản ghi, chỉ hiện 5
+        foundUsers.forEach(user => {
+            console.log(`user: ${JSON.stringify(user)}`)
+        });
+        console.log(`Tổng số: ${foundUsers.length}`)
+    } catch (error) {
+        console.log(`Không tìm thấy users. Error: ${error}`)
+    }
+}
+module.exports = {
+    insertUser, 
+    deleteAllUsers,
+    findUserById,
+    findSomeUsers
+}
