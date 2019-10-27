@@ -60,34 +60,60 @@ const findSomeUsers = async () => {
         console.log(`Không tìm thấy users. Error: ${error}`)
     }
 }
+// const updateUser = async (userId, name, email, age) => {
+//     try {
+//         let newUser = {}
+//         //Nếu không nhập "name" thì không update "name"
+//         if(email !== undefined) {
+//             newUser.email = email
+//         }
+
+//         if(age !== undefined) {
+//             newUser.age = age
+//         }
+
+//         if(name !== undefined) {
+//             newUser.name = name
+//         }
+
+//         let updatedUser = await User.findOneAndUpdate(
+//             {_id: ObjectId(userId)},
+//             newUser
+//         )
+
+//         if(updatedUser !== null) {
+//             console.log(`Update thành công user. New user = ${JSON.stringify(newUser)}`)
+//         } else {
+//             console.log("Không tìm thấy bản ghi để cập nhật")
+//         }
+//     } catch (error) {
+//         console.log(`Không thể cập nhật user. Erorr: ${error}`)
+//     }
+// }
+//Kết hợp findbyId và update
 const updateUser = async (userId, name, email, age) => {
     try {
-        let newUser = {}
-        //Nếu không nhập "name" thì không update "name"
-        if(email !== undefined) {
-            newUser.email = email
-        }
-
-        if(age !== undefined) {
-            newUser.age = age
-        }
-
-        if(name !== undefined) {
-            newUser.name = name
-        }
-
-        let updatedUser = await User.findOneAndUpdate(
-            {_id: ObjectId(userId)},
-            newUser
-        )
-
-        if(updatedUser !== null) {
-            console.log(`Update thành công user. New user = ${JSON.stringify(newUser)}`)
-        } else {
-            console.log("Không tìm thấy bản ghi để cập nhật")
-        }
+        let foundUser = await User.findById(userId)
+        if(!foundUser) {
+            console.log(`Không tìm thấy user với id=${userId} để cập nhật`)
+            return
+        } 
+        foundUser.name = (name !== undefined) ? name : foundUser.name
+        foundUser.email = (email !== undefined) ? email : foundUser.email
+        foundUser.age = (age !== undefined) ? age : foundUser.age
+        await foundUser.save()
+        console.log(`update thành công. User = ${JSON.stringify(foundUser)}`)
     } catch (error) {
-        console.log(`Không thể cập nhật user. Erorr: ${error}`)
+        console.log(`Không update được thông tin user. Error: ${error}`)
+    }
+}
+
+const deleteUser = async (userId) => {
+    try {
+        await User.deleteOne({_id:ObjectId(userId)})
+        console.log(`Xóa thành công user với id = ${JSON.stringify(userId)}`)        
+    } catch (error) {
+        console.log(`Không thể xóa user. Error: ${error}`)
     }
 }
 module.exports = {
@@ -95,5 +121,6 @@ module.exports = {
     deleteAllUsers,
     findUserById,
     findSomeUsers,
-    updateUser
+    updateUser,
+    deleteUser
 }
