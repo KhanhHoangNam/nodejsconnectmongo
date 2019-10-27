@@ -2,7 +2,8 @@ const {
     insertUser, 
     deleteAllUsers, 
     findUserById,
-    findSomeUsers
+    findSomeUsers,
+    updateUser
 } = require('./database/userController')
 // insertUser('Hoang', 30, 'sunlight4d@gmail.com')
 // insertUser('Messi', 32, 'messi.lionel@bfcs.com.vn')
@@ -22,4 +23,8 @@ const {
 // insertUser('DCao', 32, 'messi.lionelbfcs.com.vn')
 // deleteAllUsers()
 // findUserById("5db1d413748c4136f9a3065f") //id lấy ở đâu?
-findSomeUsers()
+// findSomeUsers()
+updateUser("5db1d413748c4136f9a3065c",
+           "Hoang 2",
+           "hoang@gmail.com",
+           28)

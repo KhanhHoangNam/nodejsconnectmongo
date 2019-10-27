@@ -4,6 +4,7 @@
  * @version 1.0
  */
 const {User} = require('./models')
+const {ObjectId} = require('mongoose').Types
 //Hàm insert 1 user mới
 const insertUser = async (name, age, email) => {
     try {
@@ -59,9 +60,40 @@ const findSomeUsers = async () => {
         console.log(`Không tìm thấy users. Error: ${error}`)
     }
 }
+const updateUser = async (userId, name, email, age) => {
+    try {
+        let newUser = {}
+        //Nếu không nhập "name" thì không update "name"
+        if(email !== undefined) {
+            newUser.email = email
+        }
+
+        if(age !== undefined) {
+            newUser.age = age
+        }
+
+        if(name !== undefined) {
+            newUser.name = name
+        }
+
+        let updatedUser = await User.findOneAndUpdate(
+            {_id: ObjectId(userId)},
+            newUser
+        )
+
+        if(updatedUser !== null) {
+            console.log(`Update thành công user. New user = ${JSON.stringify(newUser)}`)
+        } else {
+            console.log("Không tìm thấy bản ghi để cập nhật")
+        }
+    } catch (error) {
+        console.log(`Không thể cập nhật user. Erorr: ${error}`)
+    }
+}
 module.exports = {
     insertUser, 
     deleteAllUsers,
     findUserById,
-    findSomeUsers
+    findSomeUsers,
+    updateUser
 }
