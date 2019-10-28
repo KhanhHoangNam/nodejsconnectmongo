@@ -3,7 +3,7 @@
  * @project nodejsapp
  * @version 1.0
  */
-const {User, BlogPost} = require('./models')
+const {User, BlogPost, Comment, Product} = require('./models')
 const {ObjectId} = require('mongoose').Types
 //Hàm insert 1 user mới
 const insertUser = async (name, age, email) => {
@@ -160,6 +160,54 @@ const createSomeUsersAndPosts = async() => {
         console.log(`Không tạo được các bản ghi. Error: ${error}`)
     }
 }
+//Case study: Hiện danh sách Users, kèm chi tiết các bài BlogPost
+//Cần joins 2 collections: "users" and "blogposts"
+const populateUsers = async() => {
+    try {
+        let foundUsers = await User.find({
+            age: {$gte: 24}, //greater than equal
+        }).populate({
+            path: 'blogPosts', //populate trường tham chiếu
+            select:['title', 'content'], //Chỉ hiện title và content
+            match:{content: /lâu đài/i},
+            options:{limit: 5}
+        }).exec()
+        foundUsers.forEach(user => {
+            console.log(`user = ${user}`)
+        })
+    } catch (error) {
+        console.log(`Operation failed. Error: ${error}`)
+    }
+}
+//"Populate " theo chiều ngược lại => Hiện danh sách blogPosts =>
+//Kèm chi tiết author
+const populateBlogPosts = async () => {
+    try {
+        let foundBlogPosts = await BlogPost.find({
+
+        }).populate({
+            path: 'author',
+            select: ['name', 'email']
+        }).exec()
+        foundBlogPosts.forEach(blogPost => {
+            console.log(`blogPost = ${blogPost}`)
+        })
+        console.log(`Operation Success`)
+    } catch (error) {
+        console.log(`Operation failed. Error: ${error}`)
+    }
+}
+//Comments
+const populateComments = async() => {
+    try {
+        //Lấy ra object "mrNamKhanh cartoon"
+        let mrKhanhCartoon = await User.findById('5db715fcde7a9e29e6683bbf')
+        //"mrKhanh Cartoon" viết comment lên 1 blogpost?
+        console.log(`Operation success`)
+    } catch (error) {
+        console.log(`Operation failed. Error ${error}`)
+    }
+}
 module.exports = {
     insertUser, 
     deleteAllUsers,
@@ -167,5 +215,7 @@ module.exports = {
     findSomeUsers,
     updateUser,
     deleteUser,
-    createSomeUsersAndPosts
+    createSomeUsersAndPosts,
+    populateUsers,
+    populateBlogPosts
 }

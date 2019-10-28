@@ -34,11 +34,36 @@ const BlogPostSchema = new Schema({
     content: {type: String,default: ''},
     date: {type: Date, default: Date.now()},
     //Trường tham chiếu, 1 blogpost do 1 người viết
-    author:{type:mongoose.Schema.Types.ObjectId, ref: "User"}
+    author:{type:mongoose.Schema.Types.ObjectId, ref: "User"},
+    comments: [{type:mongoose.Schema.Types.ObjectId, ref:'Comment'}]
+})
+//Bảng Comment => Một user comment, lúc thì lên BlogPost, lúc lên Product?
+//Trường tham chiếu đó gọi là "dynamic ref"
+const CommentSchema = new Schema({
+    body: {type: String, require: true},
+    author: {type:mongoose.Schema.Types.ObjectId, ref: 'User'},
+    //Dynamic ref
+    commentOn: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true,
+        refPath: 'onModel'
+    },
+    onModel: {
+        type:String,
+        required: true,
+        enum: ['BlogPost', 'Product']
+    }
+})
+const ProductSchema = new Schema({
+    name: {type: String, default: ''},
+    yearOfProduction: {type: Number, min: 2000},
+    comments: [{type:mongoose.Schema.Types.ObjectId, ref:'Comment'}]
 })
 // Chuyển từ Schema sang Model
 const User = mongoose.model('User', UserSchema)
 const BlogPost = mongoose.model('BlogPost', BlogPostSchema)
+const Comment = mongoose.model('Comment', CommentSchema)
+const Product = mongoose.model('Product', ProductSchema)
 //export để các file khác có thể sử dụng
-module.exports = { User, BlogPost }
+module.exports = { User, BlogPost, Comment, Product }
 
