@@ -25,10 +25,20 @@ const UserSchema = new Schema({
     //schema: cấu trúc của một collection
     name: {type: String, default: 'unknown'},
     age: {type: Number, min: 18, index: true},
-    email: {type: String, match: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/}
+    email: {type: String, match: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
+    //Trường tham chiếu, một user viết nhiều blogpost
+    blogPosts:[{type:mongoose.Schema.Types.ObjectId,ref:'BlogPost'}]
+})
+const BlogPostSchema = new Schema({
+    title: {type: String, default: 'haha'},
+    content: {type: String,default: ''},
+    date: {type: Date, default: Date.now()},
+    //Trường tham chiếu, 1 blogpost do 1 người viết
+    author:{type:mongoose.Schema.Types.ObjectId, ref: "User"}
 })
 // Chuyển từ Schema sang Model
 const User = mongoose.model('User', UserSchema)
+const BlogPost = mongoose.model('BlogPost', BlogPostSchema)
 //export để các file khác có thể sử dụng
-module.exports = { User }
+module.exports = { User, BlogPost }
 

@@ -3,7 +3,7 @@
  * @project nodejsapp
  * @version 1.0
  */
-const {User} = require('./models')
+const {User, BlogPost} = require('./models')
 const {ObjectId} = require('mongoose').Types
 //Hàm insert 1 user mới
 const insertUser = async (name, age, email) => {
@@ -116,11 +116,56 @@ const deleteUser = async (userId) => {
         console.log(`Không thể xóa user. Error: ${error}`)
     }
 }
+//Case study: Tạo một user, user này "viết" 5 bài post
+const createSomeUsersAndPosts = async() => {
+    try {
+        const mrKhanhCartoon = new User({
+            name: "mr.Nam Khanh",
+            age: 24,
+            email: "khanh@gmail.com",
+            blogPosts: []
+        })
+        //Danh sách 5 bài post
+        const firstBlogPost = new BlogPost({
+            title: "Phim hoạt hình Tom&Jerry",
+            content: "Đây là phim hoạt hình dành cho các cháu thiếu nhi",
+            date: Date.now(),
+            author: mrKhanhCartoon._id 
+        })
+        await firstBlogPost.save()
+        await mrKhanhCartoon.blogPosts.push(firstBlogPost)
+        await mrKhanhCartoon.save()
+        //
+        const secondBlogPost = new BlogPost({
+            title: "Toy Story-câu chuyện đồ chơi", 
+            content: "Đây là phim hoạt hình của Pixar, hình ảnh đẹp", 
+            date: Date.now(), 
+            author: mrKhanhCartoon._id 
+        })
+        await secondBlogPost.save()
+        await mrKhanhCartoon.blogPosts.push(secondBlogPost)
+        await mrKhanhCartoon.save() 
+        //
+        const thirdBlogPost = new BlogPost({
+            title: "Frozen-nữ hoàng băng giá", 
+            content: "Nữ hoàng Elsa sử dụng phép thuật để tạo nên tòa lâu đài băng giá trên núi", 
+            date: Date.now(), 
+            author: mrKhanhCartoon._id 
+        })
+        await thirdBlogPost.save()
+        await mrKhanhCartoon.blogPosts.push(thirdBlogPost)
+        await mrKhanhCartoon.save() 
+        console.log(`Tạo thành công danh sách User và BlogPost`)
+    } catch (error) {
+        console.log(`Không tạo được các bản ghi. Error: ${error}`)
+    }
+}
 module.exports = {
     insertUser, 
     deleteAllUsers,
     findUserById,
     findSomeUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    createSomeUsersAndPosts
 }
