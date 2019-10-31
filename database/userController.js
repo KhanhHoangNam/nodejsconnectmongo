@@ -203,6 +203,30 @@ const populateComments = async() => {
         //Lấy ra object "mrNamKhanh cartoon"
         let mrKhanhCartoon = await User.findById('5db715fcde7a9e29e6683bbf')
         //"mrKhanh Cartoon" viết comment lên 1 blogpost?
+        const aBlogPost = await BlogPost.findById('5db715fcde7a9e29e6683bc2')
+        const firstComment = await Comment.create({
+            body: 'This is a good cartoon',
+            author: mrKhanhCartoon,
+            commentOn: aBlogPost,
+            onModel: 'BlogPost'
+        })    
+        aBlogPost.comments.push(firstComment)
+        await firstComment.save()
+        await aBlogPost.save()
+        //Second comment on a "product"
+        const book = await Product.create({
+            name: 'Nodejs cookbook',
+            yearOfProduction: 2018
+        })
+        const secondComment = await Comment.create({
+            body: 'This is a exellent cartoon',
+            author: mrKhanhCartoon,
+            commentOn: book,
+            onModel: 'Product'
+        })
+        book.comments.push(secondComment)
+        await secondComment.save()
+        await book.save()
         console.log(`Operation success`)
     } catch (error) {
         console.log(`Operation failed. Error ${error}`)
@@ -217,5 +241,6 @@ module.exports = {
     deleteUser,
     createSomeUsersAndPosts,
     populateUsers,
-    populateBlogPosts
+    populateBlogPosts,
+    populateComments
 }

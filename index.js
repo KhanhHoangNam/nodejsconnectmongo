@@ -7,7 +7,8 @@ const {
     deleteUser,
     createSomeUsersAndPosts,
     populateUsers,
-    populateBlogPosts
+    populateBlogPosts,
+    populateComments
 } = require('./database/userController')
 // insertUser('Hoang', 30, 'sunlight4d@gmail.com')
 // insertUser('Messi', 32, 'messi.lionel@bfcs.com.vn')
@@ -35,5 +36,6 @@ const {
 // deleteUser("5db1d413748c4136f9a3065c")  
 // createSomeUsersAndPosts()
 // populateUsers()
-populateBlogPosts()
+// populateBlogPosts()
+populateComments()
 
